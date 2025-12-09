@@ -27,11 +27,40 @@ class _HighscoreScreenState extends State<HighscoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Highscore")),
+      appBar: AppBar(
+        title: const Text("Highscore"),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF6C63FF),
+      ),
       body: Center(
-        child: Text(
-          "Highest Score: $highscore",
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        child: Card(
+          elevation: 10,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          margin: const EdgeInsets.all(30),
+          child: Padding(
+            padding: const EdgeInsets.all(40),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.emoji_events_rounded,
+                    size: 100, color: Color(0xFF6C63FF)),
+                const SizedBox(height: 20),
+                const Text(
+                  "Your Highest Score",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "$highscore",
+                  style: const TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF6C63FF),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

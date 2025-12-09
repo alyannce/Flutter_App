@@ -13,7 +13,7 @@ class MenuScreen extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF4A00E0), Color(0xFF8E2DE2)],
+            colors: [Color(0xFF6C63FF), Color(0xFF8F86FF)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -22,6 +22,7 @@ class MenuScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // App Title
               const Text(
                 "Flutter Quiz App",
                 style: TextStyle(
@@ -30,7 +31,11 @@ class MenuScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 50),
+
+              const SizedBox(height: 20),
+
+
+              // PLAY BUTTON
               MenuButton(
                 text: "Play",
                 onPressed: () {
@@ -40,14 +45,16 @@ class MenuScreen extends StatelessWidget {
                   );
                 },
               ),
+
               const SizedBox(height: 20),
+
+              // HIGHSCORE BUTTON
               MenuButton(
                 text: "See Highscore",
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (_) => const HighscoreScreen()),
+                    MaterialPageRoute(builder: (_) => const HighscoreScreen()),
                   );
                 },
               ),
@@ -66,18 +73,21 @@ class MenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 60),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 6,
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return SizedBox(
+      width: 260, // <-- SAME SIZE for both buttons
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          backgroundColor: Colors.white,
+          foregroundColor: const Color(0xFF6C63FF),
+          elevation: 8,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
