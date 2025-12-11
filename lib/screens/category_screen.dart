@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'category_screen.dart';
-import 'highscore_screen.dart';
+import 'quiz_screen.dart';
+import 'menu_screen.dart';
 
-class MenuScreen extends StatelessWidget {
-  const MenuScreen({super.key});
+class CategoryScreen extends StatelessWidget {
+  const CategoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,38 +22,52 @@ class MenuScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Title
+              // Screen Title
               const Text(
-                "Flutter Quiz App",
+                "Choose Category",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 40),
 
-              const SizedBox(height: 20),
-
-              // PLAY BUTTON → now opens CategoryScreen
+              // MIT Category Button
               MenuButton(
-                text: "Play",
+                text: "MIT App Inventor",
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const CategoryScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => const QuizScreen(category: "mit"),
+                    ),
                   );
                 },
               ),
-
               const SizedBox(height: 20),
 
-              // HIGHSCORE BUTTON
+              // Flutter Category Button
               MenuButton(
-                text: "See Highscore",
+                text: "Flutter Quiz",
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const HighscoreScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => const QuizScreen(category: "flutter"),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 40),
+
+              // Back to Menu Button
+              MenuButton(
+                text: "Back to Menu",
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const MenuScreen()),
                   );
                 },
               ),
@@ -65,6 +79,7 @@ class MenuScreen extends StatelessWidget {
   }
 }
 
+// Reusing MenuButton from MenuScreen
 class MenuButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -73,7 +88,7 @@ class MenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 260, // SAME SIZE for both buttons
+      width: 260,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

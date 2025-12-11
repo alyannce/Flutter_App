@@ -1,55 +1,49 @@
 import 'package:flutter/material.dart';
+import '../data/questions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen({super.key});
+  final String category;
+  const QuizScreen({super.key, required this.category});
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
 }
 
 class _QuizScreenState extends State<QuizScreen> {
+  late List<Question> questions;
   int currentQuestion = 0;
   int score = 0;
 
-  List<Map<String, dynamic>> questions = [
-    {
-      "question": "What is Flutter?",
-      "choices": ["SDK", "Game Engine", "Database", "OS"],
-      "answer": "SDK"
-    },
-    {
-      "question": "Who created Flutter?",
-      "choices": ["Google", "Apple", "Microsoft", "Meta"],
-      "answer": "Google"
-    },
-    {
-      "question": "What language does Flutter use?",
-      "choices": ["Java", "Dart", "Kotlin", "Swift"],
-      "answer": "Dart"
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    questions = widget.category == "mit"
+        ? QuizData.mitQuestions
+        : QuizData.flutterQuestions;
+  }
 
-  void checkAnswer(String choice) async {
-    bool isCorrect = choice == questions[currentQuestion]["answer"];
+  void checkAnswer(int chosenIndex) async {
+    if (chosenIndex == questions[currentQuestion].correctIndex) {
+      score++;
+    }
 
-    if (isCorrect) score++;
-
-    // Go next question or finish
     if (currentQuestion < questions.length - 1) {
       setState(() => currentQuestion++);
     } else {
-      saveHighscore();
+      await saveHighscore();
       showResultDialog();
     }
   }
 
   Future<void> saveHighscore() async {
     final prefs = await SharedPreferences.getInstance();
-    int highscore = prefs.getInt("highscore") ?? 0;
+    String key =
+        widget.category == "mit" ? "mit_highscore" : "flutter_highscore";
+    int highscore = prefs.getInt(key) ?? 0;
 
     if (score > highscore) {
-      prefs.setInt("highscore", score);
+      await prefs.setInt(key, score);
     }
   }
 
@@ -76,6 +70,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final question = questions[currentQuestion];
     double progress = (currentQuestion + 1) / questions.length;
 
     return Scaffold(
@@ -93,25 +88,24 @@ class _QuizScreenState extends State<QuizScreen> {
           child: Column(
             children: [
               // Progress Bar
-                Container(
-                  height: 12,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(255, 255, 255, 0.3),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: progress,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+              Container(
+                height: 12,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(255, 255, 255, 0.3),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: progress,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),
-
+              ),
 
               const SizedBox(height: 30),
 
@@ -123,7 +117,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    questions[currentQuestion]["question"],
+                    question.question,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -137,13 +131,33 @@ class _QuizScreenState extends State<QuizScreen> {
 
               // Choices
               Column(
-                children: questions[currentQuestion]["choices"]
-                    .map<Widget>((choice) => AnswerButton(
-                          text: choice,
-                          onPressed: () => checkAnswer(choice),
-                        ))
-                    .toList(),
+                children: List.generate(question.options.length, (i) {
+                  return AnswerButton(
+                      text: question.options[i],
+                      onPressed: () => checkAnswer(i));
+                }),
               ),
+              const SizedBox(height: 20),
+                  SizedBox(
+                    width: 180, // smaller than choice buttons
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context); // go back to menu
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF6C63FF),
+                        elevation: 6,
+                      ),
+                      child: const Text(
+                        "Back to Menu",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
             ],
           ),
         ),

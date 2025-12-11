@@ -9,18 +9,20 @@ class HighscoreScreen extends StatefulWidget {
 }
 
 class _HighscoreScreenState extends State<HighscoreScreen> {
-  int highscore = 0;
+  int mitHigh = 0;
+  int flutterHigh = 0;
 
   @override
   void initState() {
     super.initState();
-    loadHighscore();
+    loadScores();
   }
 
-  Future<void> loadHighscore() async {
+  Future<void> loadScores() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      highscore = prefs.getInt('highscore') ?? 0;
+      mitHigh = prefs.getInt('mit_highscore') ?? 0;
+      flutterHigh = prefs.getInt('flutter_highscore') ?? 0;
     });
   }
 
@@ -28,39 +30,50 @@ class _HighscoreScreenState extends State<HighscoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Highscore"),
+        title: const Text("Highscores"),
         centerTitle: true,
         backgroundColor: const Color(0xFF6C63FF),
       ),
       body: Center(
-        child: Card(
-          elevation: 10,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          margin: const EdgeInsets.all(30),
-          child: Padding(
-            padding: const EdgeInsets.all(40),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.emoji_events_rounded,
-                    size: 100, color: Color(0xFF6C63FF)),
-                const SizedBox(height: 20),
-                const Text(
-                  "Your Highest Score",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "$highscore",
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF6C63FF),
-                  ),
-                ),
-              ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            scoreCard("MIT Quiz", mitHigh),
+            const SizedBox(height: 30),
+            scoreCard("Flutter Quiz", flutterHigh),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget scoreCard(String title, int score) {
+    return Card(
+      elevation: 10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      margin: const EdgeInsets.symmetric(horizontal: 30),
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.emoji_events_rounded,
+                size: 100, color: Color(0xFF6C63FF)),
+            const SizedBox(height: 20),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-          ),
+            const SizedBox(height: 10),
+            Text(
+              "$score",
+              style: const TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF6C63FF),
+              ),
+            ),
+          ],
         ),
       ),
     );
