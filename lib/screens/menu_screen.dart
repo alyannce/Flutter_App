@@ -24,13 +24,16 @@ class MenuScreen extends StatelessWidget {
             children: [
               // App Title
               const Text(
-                "Flutter Quiz App",
+                "KwizZ",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 80,          // Bigger title
+                  fontWeight: FontWeight.w900, // Thickest built-in bold
+                  letterSpacing: 1.5,    // Cleaner spacing
+                  fontFamily: 'Roboto',  // Built-in font
                 ),
               ),
+
 
               const SizedBox(height: 20),
 
@@ -73,7 +76,7 @@ class MenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 260, // SAME SIZE for both buttons
+      width: 260, 
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
